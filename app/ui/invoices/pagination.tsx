@@ -4,17 +4,44 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
+// 引入hooks
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
   // NOTE: comment in this code when you get to this point in the course
 
-  // const allPages = generatePagination(currentPage, totalPages);
+  // 获取pathname
+  const pathname = usePathname();
+  // 获取路径query
+  const searchParams = useSearchParams();
+  const [currentPage, setCurentPage] = useState(0);
+  // 获取当前页
+  useEffect(() => {
+    if (searchParams) {
+      const currentPageIndex = Number(searchParams.get('page')) || 1;
+      setCurentPage(currentPageIndex);
+    }
+  }, [searchParams]);
+
+  // 创建当前搜索参数的实例。
+  const createPageURL = useCallback(
+    (pageNumber: number | string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', pageNumber.toString());
+
+      return `${pathname}?${params.toString()}`;
+    },
+    [searchParams, pathname],
+  );
+
+  const allPages = generatePagination(currentPage, totalPages);
 
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
 
-      {/* <div className="inline-flex">
+      <div className="inline-flex">
         <PaginationArrow
           direction="left"
           href={createPageURL(currentPage - 1)}
@@ -36,7 +63,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
                 href={createPageURL(page)}
                 page={page}
                 position={position}
-                isActive={currentPage === page}
+                isActive={currentPage === index + 1}
               />
             );
           })}
@@ -47,7 +74,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
           href={createPageURL(currentPage + 1)}
           isDisabled={currentPage >= totalPages}
         />
-      </div> */}
+      </div>
     </>
   );
 }

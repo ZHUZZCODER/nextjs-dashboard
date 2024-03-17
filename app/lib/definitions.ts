@@ -17,6 +17,7 @@ export type Customer = {
   image_url: string;
 };
 
+// 表单提交数据格式
 export type Invoice = {
   id: string;
   customer_id: string;
