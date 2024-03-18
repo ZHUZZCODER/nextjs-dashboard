@@ -3,7 +3,7 @@ import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
 
 // 创建标题
-export const metadate: Metadata = {
+export const metadata: Metadata = {
   // title: 'Acme Dashboard',
   // %s替换特定的内容
   title: '%s | Acme Dashboard',
